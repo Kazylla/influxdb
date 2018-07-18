@@ -48,6 +48,17 @@ type HTTPConfig struct {
 
 	// Proxy configures the Proxy function on the HTTP client.
 	Proxy func(req *http.Request) (*url.URL, error)
+
+	// IdleConnTimeout is the maximum amount of time an idle
+	// (keep-alive) connection will remain idle before closing
+	// itself.
+	// Zero means no limit.
+	IdleConnTimeout time.Duration
+
+	// MaxIdleConnsPerHost, if non-zero, controls the maximum idle
+	// (keep-alive) connections to keep per-host. If zero,
+	// DefaultMaxIdleConnsPerHost is used.
+	MaxIdleConnsPerHost int
 }
 
 // BatchPointsConfig is the config data needed to create an instance of the BatchPoints struct.
@@ -103,6 +114,8 @@ func NewHTTPClient(conf HTTPConfig) (Client, error) {
 			InsecureSkipVerify: conf.InsecureSkipVerify,
 		},
 		Proxy: conf.Proxy,
+		IdleConnTimeout: conf.IdleConnTimeout,
+		MaxIdleConnsPerHost: conf.MaxIdleConnsPerHost,
 	}
 	if conf.TLSConfig != nil {
 		tr.TLSClientConfig = conf.TLSConfig
